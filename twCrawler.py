@@ -66,4 +66,3 @@ def main():
     write_log_msg(logfile,"{} Crawler process restarted.\n".format(datetime.datetime.now()))
 
 if __name__ =="__main__": main()
-2020-04-02 16:44:38.469824 Crawler process started.
