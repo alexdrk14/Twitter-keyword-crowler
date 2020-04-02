@@ -3,6 +3,8 @@
 import twitter
 import io 
 import sys
+import time
+import datetime
 import configfile as cnf
 from pymongo import MongoClient
 from dateutil.parser import parse
@@ -25,8 +27,12 @@ def read_keywords():
     key=key.decode('utf8')
   return keywords
 
+def write_log_msg(logfile, msg):
+  f_out = open(logfile, "a+")
+  f_out.write(msg)
+  f_out.close()
 
-def main():
+def collect(logfile):
   #create authentication twitter.API
   api = twitter.Api(consumer_key=cnf.TWCONFIG["consumer_key"],
                   consumer_secret=cnf.TWCONFIG["consumer_secret"],
@@ -34,7 +40,7 @@ def main():
                   access_token_secret=cnf.TWCONFIG['access_token_secret'])
   #get twitter stream
   search=api.GetStreamFilter(track=read_keywords())
-  
+
   client, db, collection = connect_to_db(cnf.DBCONFIG)
   #for each tweet collected by strem filter insert them into mongoDB greek collection
   try:
@@ -45,8 +51,19 @@ def main():
       #insert each new tweet into collection
       collection.insert(tweet)
   except Exception as e:
-    print("Error occured: {}.".format(e))
+    write_log_msg(logfile,"{} Error occured: {}.\n".format(datetime.datetime.now(),e))
+    time.sleep(60*30)
   finally:
     client.close()
+
+
+def main():
+  logfile = "twCrawler.py"
+  f_out= open(logfile,"a+")
+  f_out.write("{} Crawler process started.\n".format(datetime.datetime.now()))
+  f_out.close()
+  while(True):
+    collect(logfile)
+    write_log_msg(logfile,"{} Crawler process restarted.\n".format(datetime.datetime.now()))
 
 if __name__ =="__main__": main()
