@@ -30,6 +30,7 @@ def read_keywords():
 def write_log_msg(logfile, msg):
   f_out = open(logfile, "a+")
   f_out.write(msg)
+  f_out.flush()
   f_out.close()
 
 def collect(logfile):
@@ -58,12 +59,11 @@ def collect(logfile):
 
 
 def main():
-  logfile = "twCrawler.py"
-  f_out= open(logfile,"a+")
-  f_out.write("{} Crawler process started.\n".format(datetime.datetime.now()))
-  f_out.close()
+  logfile = "crawler_log.txt"
+  write_log_msg(logfile,"{} Crawler process started.\n".format(datetime.datetime.now()))
   while(True):
     collect(logfile)
     write_log_msg(logfile,"{} Crawler process restarted.\n".format(datetime.datetime.now()))
 
 if __name__ =="__main__": main()
+2020-04-02 16:44:38.469824 Crawler process started.
