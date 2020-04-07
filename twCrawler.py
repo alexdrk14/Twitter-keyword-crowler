@@ -34,17 +34,18 @@ def write_log_msg(logfile, msg):
   f_out.close()
 
 def collect(logfile):
-  #create authentication twitter.API
-  api = twitter.Api(consumer_key=cnf.TWCONFIG["consumer_key"],
+  try:
+    #create authentication twitter.API
+    api = twitter.Api(consumer_key=cnf.TWCONFIG["consumer_key"],
                   consumer_secret=cnf.TWCONFIG["consumer_secret"],
                   access_token_key=cnf.TWCONFIG["access_token_key"],
                   access_token_secret=cnf.TWCONFIG['access_token_secret'])
-  #get twitter stream
-  search=api.GetStreamFilter(track=read_keywords())
+    #get twitter stream
+    search=api.GetStreamFilter(track=read_keywords())
+    
+    client, db, collection = connect_to_db(cnf.DBCONFIG)
 
-  client, db, collection = connect_to_db(cnf.DBCONFIG)
-  #for each tweet collected by strem filter insert them into mongoDB greek collection
-  try:
+    #for each tweet collected by strem filter insert them into mongoDB greek collection
     for tweet in search:
       if "created_at" in tweet.keys():
         #parse created datetime if exists
