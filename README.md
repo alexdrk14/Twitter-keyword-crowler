@@ -2,6 +2,15 @@
 Python twitter crawler based on keywords
 
 Install extra library:
--"pip install python-twitter"
+```bash
+pip install python-twitter
+```
 
-Configuration are described in "configfile_template.py, you just need to insert your data and save it as "configfile.py" 
+Configuration are described in "configfile.py, you just need to insert your data and save it.
+
+Keywords are stored in hashtag form (keyword.txt file).
+
+For execution just run:
+```bash
+python3 crawler.py
+```
