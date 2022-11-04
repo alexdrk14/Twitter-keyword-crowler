@@ -53,7 +53,8 @@ class Crawler:
             tweet["created_at"] = parse_string_date(tweet["created_at"])
 
         if "user" in tweet:
-            user_object = tweet.pop("user")
+            tweet["user"]['created_at'] = parse_string_date(tweet["user"]['created_at'])
+            user_object = tweet["user"]
             user_object["id"] = int(user_object["id"])
             tweet["user_id"] = user_object["id"]
 
@@ -90,7 +91,8 @@ class Crawler:
                     self.dump_data()
 
         except Exception as e:
-            stack = ''.join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))
+            #stack = ''.join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))
+            stack = e
             self.write_log(f'Error occured: {e} and stack: {stack}')
             time.sleep(60 * 30)
 
